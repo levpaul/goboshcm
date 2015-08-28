@@ -55,5 +55,15 @@ func TestOptionsEndpointReturnsCredentials(t *testing.T) {
 
 	commonTestHandler.ServeHTTP(recorder, req)
 
+	assert.Equal(t, "false", recorder.Header().Get("Access-Control-Allow-Credentials"))
+}
+
+func TestOptionsEndpointReturnsCredentialsWithOrigin(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	req, _ := http.NewRequest("OPTIONS", commonTestConnUrl, nil)
+	req.Header.Add("Origin", "https://mydomain.test.com")
+
+	commonTestHandler.ServeHTTP(recorder, req)
+
 	assert.Equal(t, "true", recorder.Header().Get("Access-Control-Allow-Credentials"))
 }

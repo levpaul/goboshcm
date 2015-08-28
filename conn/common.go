@@ -7,10 +7,11 @@ func getCommonHeaders(w http.ResponseWriter, r *http.Request) {
 
 	if origin != "" {
 		w.Header().Add("Access-Control-Allow-Origin", origin)
+		w.Header().Add("Access-Control-Allow-Credentials", "true")
 	} else {
 		w.Header().Add("Access-Control-Allow-Origin", "*")
+		w.Header().Add("Access-Control-Allow-Credentials", "false")
 	}
 
-	w.Header().Add("Access-Control-Allow-Credentials", "true")
 	w.Header().Add("Access-Control-Allow-Headers", "Content-Type")
 }
