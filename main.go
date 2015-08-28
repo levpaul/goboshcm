@@ -3,18 +3,12 @@ package main
 import (
 	"log"
 	"net/http"
-	"time"
+
+	"github.com/levilovelock/goboshcm/conn"
 )
 
 func main() {
-
-	s := &http.Server{
-		Addr:           ":8080",
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
-		MaxHeaderBytes: 1 << 20,
-	}
-
-	log.Fatal(s.ListenAndServe())
-
+	r := conn.ConstructRouter()
+	log.Println("Starting GoBOSHCM server, listenining on :5280")
+	http.ListenAndServe(":5280", r)
 }
