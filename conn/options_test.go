@@ -69,3 +69,12 @@ func TestOptionsEndpointReturnsContentType(t *testing.T) {
 
 	assert.Equal(t, "Content-Type", recorder.Header().Get("Access-Control-Allow-Headers"))
 }
+
+func TestOptionsEndpointReturnsCredentials(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	req, _ := http.NewRequest("OPTIONS", connUrl, nil)
+
+	handler.ServeHTTP(recorder, req)
+
+	assert.Equal(t, "true", recorder.Header().Get("Access-Control-Allow-Credentials"))
+}
