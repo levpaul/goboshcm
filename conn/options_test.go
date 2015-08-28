@@ -40,3 +40,23 @@ func TestOptionsEndpointReturnsMethods(t *testing.T) {
 
 	assert.Equal(t, "GET, POST, OPTIONS", recorder.Header().Get("Access-Control-Allow-Methods"))
 }
+
+func TestOptionsEndpointReturnsKleeneOrigin(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	req, _ := http.NewRequest("OPTIONS", connUrl, nil)
+	req.Header.Del("Origin")
+
+	handler.ServeHTTP(recorder, req)
+
+	assert.Equal(t, "*", recorder.Header().Get("Access-Control-Allow-Origin"))
+}
+
+func TestOptionsEndpointReturnsOriginalOrigin(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	req, _ := http.NewRequest("OPTIONS", connUrl, nil)
+	req.Header.Add("Origin", "https://mydomain.test.com")
+
+	handler.ServeHTTP(recorder, req)
+
+	assert.Equal(t, "https://mydomain.test.com", recorder.Header().Get("Access-Control-Allow-Origin"))
+}
