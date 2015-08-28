@@ -31,3 +31,12 @@ func TestOptionsEndpointReturnsNoBody(t *testing.T) {
 
 	assert.Equal(t, "", recorder.Body.String())
 }
+
+func TestOptionsEndpointReturnsMethods(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	req, _ := http.NewRequest("OPTIONS", connUrl, nil)
+
+	handler.ServeHTTP(recorder, req)
+
+	assert.Equal(t, "GET, POST, OPTIONS", recorder.Header().Get("Access-Control-Allow-Methods"))
+}
