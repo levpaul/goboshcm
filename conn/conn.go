@@ -6,6 +6,7 @@ func ConstructRouter() *mux.Router {
 	r := mux.NewRouter()
 
 	r.Methods("OPTIONS").Path("/http-bind").HandlerFunc(optionsHandler)
+	r.Methods("GET").Path("/http-bind").HandlerFunc(getHandler)
 
 	return r
 }
