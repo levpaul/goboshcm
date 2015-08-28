@@ -6,10 +6,6 @@ const (
 	ALLOWED_METHODS = "GET, POST, OPTIONS"
 )
 
-var (
-	ALLOWED_ORIGINS string
-)
-
 func optionsHandler(w http.ResponseWriter, r *http.Request) {
 	origin := r.Header.Get("Origin")
 
