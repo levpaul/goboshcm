@@ -60,3 +60,12 @@ func TestOptionsEndpointReturnsOriginalOrigin(t *testing.T) {
 
 	assert.Equal(t, "https://mydomain.test.com", recorder.Header().Get("Access-Control-Allow-Origin"))
 }
+
+func TestOptionsEndpointReturnsContentType(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	req, _ := http.NewRequest("OPTIONS", connUrl, nil)
+
+	handler.ServeHTTP(recorder, req)
+
+	assert.Equal(t, "Content-Type", recorder.Header().Get("Access-Control-Allow-Headers"))
+}
