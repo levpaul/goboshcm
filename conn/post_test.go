@@ -40,6 +40,16 @@ func TestPostReturns200(t *testing.T) {
 	assert.Equal(t, 200, recorder.Code)
 }
 
+func TestPostWithBogusXmlReturns400(t *testing.T) {
+	recorder := httptest.NewRecorder()
+
+	req, _ := http.NewRequest("POST", optionsTestConnUrl, bytes.NewBuffer([]byte(`<xml man i am cool>`)))
+
+	optionsTestHandler.ServeHTTP(recorder, req)
+
+	assert.Equal(t, 400, recorder.Code)
+}
+
 func TestParsingPayload(t *testing.T) {
 	var pl Payload
 	err := xml.Unmarshal(validFirstPostRequestBody, &pl)
