@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/levilovelock/goboshcm/sessions"
+
 	"encoding/xml"
 )
 
@@ -49,6 +51,21 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
+
+	if payload.Sid == "" {
+		var sessionErr error
+		payload.Sid, sessionErr = sessions.CreateNewSession()
+		if sessionErr != nil {
+			log.Println("Error creating session,", err.Error())
+			w.WriteHeader(500)
+			return
+		}
+	} else if !sessions.SessionExists(payload.Sid) {
+		log.Println("Invalid sid supplied for request")
+		w.WriteHeader(400)
+		return
+	}
+
 	/*
 			   Overview
 			    1. Parse the xml in the body (400 on bad parse) https://golang.org/pkg/encoding/xml/

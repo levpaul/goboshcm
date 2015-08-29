@@ -9,6 +9,7 @@ import (
 	"encoding/xml"
 
 	"github.com/gorilla/mux"
+	"github.com/levilovelock/goboshcm/sessions"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,7 +17,7 @@ var (
 	postTestHandler *mux.Router = ConstructRouter()
 	postTestConnUrl string      = "http://localhost:5280/http-bind"
 
-	validFirstPostSessionCreationRequestBody = []byte(`<body
+	validFirstPOSTSessionCreationRequestBody = []byte(`<body
         rid='2902921866'
         xmlns='http://jabber.org/protocol/httpbind'
         to='chat.mysite.com'
@@ -32,8 +33,9 @@ var (
 
 func TestSessionCreationPOSTReturns200(t *testing.T) {
 	recorder := httptest.NewRecorder()
+	sessions.InitialiseSessionsPool()
 
-	req, _ := http.NewRequest("POST", postTestConnUrl, bytes.NewBuffer(validFirstPostSessionCreationRequestBody))
+	req, _ := http.NewRequest("POST", postTestConnUrl, bytes.NewBuffer(validFirstPOSTSessionCreationRequestBody))
 
 	postTestHandler.ServeHTTP(recorder, req)
 
@@ -52,7 +54,7 @@ func TestPOSTWithBogusXmlReturns400(t *testing.T) {
 
 func TestParsingSessionCreationPayload(t *testing.T) {
 	var pl Payload
-	err := xml.Unmarshal(validFirstPostSessionCreationRequestBody, &pl)
+	err := xml.Unmarshal(validFirstPOSTSessionCreationRequestBody, &pl)
 
 	assert.Nil(t, err)
 
