@@ -34,7 +34,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	/* TODO: This is a hack because the encoding/xml library can't
 	*  handle colons in the attr names. See the following isse
 	*  https://github.com/golang/go/issues/11735 */
-	body = sanitizeXml(body)
+	body = []byte(*sanitizeXml(&body))
 
 	if readErr != nil {
 		log.Println("Error reading body from request!")
@@ -68,10 +68,10 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // TODO: Remove this function or optimise it
-func sanitizeXml(b []byte) []byte {
-	s := string(b)
+func sanitizeXml(b *[]byte) *string {
+	s := string(*b)
 	s = strings.Replace(s, "xml:lang=", "xmllang=", 1)
 	s = strings.Replace(s, "xmpp:version=", "xmllang=", 1)
 	s = strings.Replace(s, "xmlns:xmpp=", "xmlnsxmpp=", 1)
-	return []byte(s)
+	return &s
 }
