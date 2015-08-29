@@ -30,22 +30,22 @@ var (
         route='xmpp:mysite.com:5999'/>`)
 )
 
-func TestSessionCreationPostReturns200(t *testing.T) {
+func TestSessionCreationPOSTReturns200(t *testing.T) {
 	recorder := httptest.NewRecorder()
 
-	req, _ := http.NewRequest("POST", optionsTestConnUrl, bytes.NewBuffer(validFirstPostSessionCreationRequestBody))
+	req, _ := http.NewRequest("POST", postTestConnUrl, bytes.NewBuffer(validFirstPostSessionCreationRequestBody))
 
-	optionsTestHandler.ServeHTTP(recorder, req)
+	postTestHandler.ServeHTTP(recorder, req)
 
 	assert.Equal(t, 200, recorder.Code)
 }
 
-func TestPostWithBogusXmlReturns400(t *testing.T) {
+func TestPOSTWithBogusXmlReturns400(t *testing.T) {
 	recorder := httptest.NewRecorder()
 
-	req, _ := http.NewRequest("POST", optionsTestConnUrl, bytes.NewBuffer([]byte(`<xml man i am cool>`)))
+	req, _ := http.NewRequest("POST", postTestConnUrl, bytes.NewBuffer([]byte(`<xml man i am cool>`)))
 
-	optionsTestHandler.ServeHTTP(recorder, req)
+	postTestHandler.ServeHTTP(recorder, req)
 
 	assert.Equal(t, 400, recorder.Code)
 }
@@ -76,4 +76,15 @@ func TestParsingSid(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, "abc123", pl.Sid)
+}
+
+func TestPOSTWithNonExistantSidReturns400(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	sessions.InitialiseSessionsPool()
+
+	req, _ := http.NewRequest("POST", postTestConnUrl, bytes.NewBuffer([]byte(`<body sid='a1b2c3' />`)))
+
+	postTestHandler.ServeHTTP(recorder, req)
+
+	assert.Equal(t, 400, recorder.Code)
 }

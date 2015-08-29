@@ -14,7 +14,7 @@ var (
 	getTestConnUrl string      = "http://localhost:5280/http-bind"
 )
 
-func TestGetEndpointExistsReturns200(t *testing.T) {
+func TestGETEndpointExistsReturns200(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", optionsTestConnUrl, nil)
 
@@ -23,7 +23,7 @@ func TestGetEndpointExistsReturns200(t *testing.T) {
 	assert.Equal(t, 200, recorder.Code)
 }
 
-func TestOptionsEndpointReturnsBody(t *testing.T) {
+func TestGETEndpointReturnsBody(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", optionsTestConnUrl, nil)
 

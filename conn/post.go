@@ -54,7 +54,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 			    1. Parse the xml in the body (400 on bad parse) https://golang.org/pkg/encoding/xml/
 			    2. Check for sid -> if exists
 		          - get Session
-		          if can't find, return 404 else:
+		          if can't find, return 400 else:
 
 			    3. Else create new session
 		       - check RID (error if not exist)
