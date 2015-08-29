@@ -16,7 +16,7 @@ var (
 	postTestHandler *mux.Router = ConstructRouter()
 	postTestConnUrl string      = "http://localhost:5280/http-bind"
 
-	validFirstPostRequestBody = []byte(`<body
+	validFirstPostSessionCreationRequestBody = []byte(`<body
         rid='2902921866'
         xmlns='http://jabber.org/protocol/httpbind'
         to='chat.mysite.com'
@@ -30,10 +30,10 @@ var (
         route='xmpp:mysite.com:5999'/>`)
 )
 
-func TestPostReturns200(t *testing.T) {
+func TestSessionCreationPostReturns200(t *testing.T) {
 	recorder := httptest.NewRecorder()
 
-	req, _ := http.NewRequest("POST", optionsTestConnUrl, bytes.NewBuffer(validFirstPostRequestBody))
+	req, _ := http.NewRequest("POST", optionsTestConnUrl, bytes.NewBuffer(validFirstPostSessionCreationRequestBody))
 
 	optionsTestHandler.ServeHTTP(recorder, req)
 
@@ -50,9 +50,9 @@ func TestPostWithBogusXmlReturns400(t *testing.T) {
 	assert.Equal(t, 400, recorder.Code)
 }
 
-func TestParsingPayload(t *testing.T) {
+func TestParsingSessionCreationPayload(t *testing.T) {
 	var pl Payload
-	err := xml.Unmarshal(validFirstPostRequestBody, &pl)
+	err := xml.Unmarshal(validFirstPostSessionCreationRequestBody, &pl)
 
 	assert.Nil(t, err)
 
@@ -67,4 +67,13 @@ func TestParsingPayload(t *testing.T) {
 	assert.Equal(t, "1.0", pl.XmppVer)
 	assert.Equal(t, "urn:xmpp:xbosh", pl.XmlnsXmpp)
 	assert.Equal(t, "xmpp:mysite.com:5999", pl.Route)
+	assert.Equal(t, "", pl.Sid)
+}
+
+func TestParsingSid(t *testing.T) {
+	var pl Payload
+	err := xml.Unmarshal([]byte(`<body sid="abc123" />`), &pl)
+
+	assert.Nil(t, err)
+	assert.Equal(t, "abc123", pl.Sid)
 }

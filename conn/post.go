@@ -22,6 +22,7 @@ type Payload struct {
 	XmppVer   string   `xml:"xmppversion,attr"`
 	XmlnsXmpp string   `xml:"xmlnsxmpp,attr"`
 	Route     string   `xml:"route,attr"`
+	Sid       string   `xml:"sid,attr"`
 }
 
 // The real workhorse
@@ -48,7 +49,6 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
-
 	/*
 			   Overview
 			    1. Parse the xml in the body (400 on bad parse) https://golang.org/pkg/encoding/xml/
