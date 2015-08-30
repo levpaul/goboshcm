@@ -36,11 +36,6 @@ func SessionExists(sid string) bool {
 	return sessions[sid] != nil
 }
 
-// 40 chars long, seeded with salt + time
-// e.g. a73f45f297e6ee34ad8300e68bb531c59850c699
-// punjab just does:
-// self.sid = "".join("%02x" % ord(i) for i in os.urandom(20))
-
 func generateNewSid() (string, error) {
 	// Simply appending two uuids together, stripping the dashes
 	// and trimming to 40 chars
