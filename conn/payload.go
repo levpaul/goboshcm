@@ -23,6 +23,7 @@ type Payload struct {
 
 func validatePayloadForSessionCreation(pl *Payload) error {
 	// Check that mandatory fields are set
+	// TODO: Added whitelist/blacklist validations
 	if pl.To == "" || pl.XMLLang == "" || pl.Version == "" || pl.Wait == "" || pl.Hold == "" || pl.RID == "" {
 		return errors.New("Invalid xml body for session creation")
 	} else {
