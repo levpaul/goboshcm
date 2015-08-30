@@ -4,7 +4,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/levilovelock/goboshcm/sessions"
 
@@ -16,13 +15,13 @@ type Payload struct {
 	Rid       int      `xml:"rid,attr"`
 	To        string   `xml:"to,attr"`
 	Xmlns     string   `xml:"xmlns,attr"`
-	XmlLang   string   `xml:"xmllang,attr"`
+	XmlLang   string   `xml:"http://www.w3.org/XML/1998/namespace lang,attr"`
 	Wait      int      `xml:"wait,attr"`
 	Hold      int      `xml:"hold,attr"`
 	Content   string   `xml:"content,attr"`
 	Ver       string   `xml:"ver,attr"`
-	XmppVer   string   `xml:"xmppversion,attr"`
-	XmlnsXmpp string   `xml:"xmlnsxmpp,attr"`
+	XmppVer   string   `xml:"urn:xmpp:xbosh version,attr"`
+	XmlnsXmpp string   `xml:"xmlns xmpp,attr"`
 	Route     string   `xml:"route,attr"`
 	Sid       string   `xml:"sid,attr"`
 }
@@ -32,11 +31,6 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	getCommonHeaders(w, r)
 
 	body, readErr := ioutil.ReadAll(r.Body)
-
-	/* TODO: This is a hack because the encoding/xml library can't
-	*  handle colons in the attr names. See the following isse
-	*  https://github.com/golang/go/issues/11735 */
-	body = []byte(*sanitizeXml(&body))
 
 	if readErr != nil {
 		log.Println("Error reading body from request!")
@@ -82,13 +76,4 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		       - get innactivity
 
 	*/
-}
-
-// TODO: Remove this function or optimise it
-func sanitizeXml(b *[]byte) *string {
-	s := string(*b)
-	s = strings.Replace(s, "xml:lang=", "xmllang=", 1)
-	s = strings.Replace(s, "xmpp:version=", "xmllang=", 1)
-	s = strings.Replace(s, "xmlns:xmpp=", "xmlnsxmpp=", 1)
-	return &s
 }

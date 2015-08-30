@@ -21,13 +21,13 @@ var (
         rid='2902921866'
         xmlns='http://jabber.org/protocol/httpbind'
         to='chat.mysite.com'
-        xmllang='en'
+        xml:lang='en'
         wait='60'
         hold='1'
         content='text/xml; charset=utf-8'
         ver='1.6'
-        xmppversion='1.0'
-        xmlnsxmpp='urn:xmpp:xbosh'
+        xmpp:version='1.0'
+        xmlns:xmpp='urn:xmpp:xbosh'
         route='xmpp:mysite.com:5999'/>`)
 )
 
