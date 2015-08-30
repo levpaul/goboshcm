@@ -13,6 +13,60 @@ func TestValidationOfPayloadForSessionCreationSuccess(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestPayloadValidationForSessionCreationFailsOnRID(t *testing.T) {
+	pl := getValidPayloadForSessionCreation()
+
+	pl.RID = ""
+
+	err := validatePayloadForSessionCreation(pl)
+	assert.NotNil(t, err)
+}
+
+func TestPayloadValidationForSessionCreationFailsOnTo(t *testing.T) {
+	pl := getValidPayloadForSessionCreation()
+
+	pl.To = ""
+
+	err := validatePayloadForSessionCreation(pl)
+	assert.NotNil(t, err)
+}
+
+func TestPayloadValidationForSessionCreationFailsOnVersion(t *testing.T) {
+	pl := getValidPayloadForSessionCreation()
+
+	pl.Version = ""
+
+	err := validatePayloadForSessionCreation(pl)
+	assert.NotNil(t, err)
+}
+
+func TestPayloadValidationForSessionCreationFailsOnXMLLang(t *testing.T) {
+	pl := getValidPayloadForSessionCreation()
+
+	pl.XMLLang = ""
+
+	err := validatePayloadForSessionCreation(pl)
+	assert.NotNil(t, err)
+}
+
+func TestPayloadValidationForSessionCreationFailsOnWait(t *testing.T) {
+	pl := getValidPayloadForSessionCreation()
+
+	pl.Wait = ""
+
+	err := validatePayloadForSessionCreation(pl)
+	assert.NotNil(t, err)
+}
+
+func TestPayloadValidationForSessionCreationFailsOnHold(t *testing.T) {
+	pl := getValidPayloadForSessionCreation()
+
+	pl.Hold = ""
+
+	err := validatePayloadForSessionCreation(pl)
+	assert.NotNil(t, err)
+}
+
 func getValidPayloadForSessionCreation() *Payload {
 	return &Payload{
 		RID:     "2902921866",
