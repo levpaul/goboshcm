@@ -10,22 +10,6 @@ import (
 	"encoding/xml"
 )
 
-type Payload struct {
-	XMLName   xml.Name `xml:"body"`
-	Rid       int      `xml:"rid,attr"`
-	To        string   `xml:"to,attr"`
-	Xmlns     string   `xml:"xmlns,attr"`
-	XmlLang   string   `xml:"http://www.w3.org/XML/1998/namespace lang,attr"`
-	Wait      int      `xml:"wait,attr"`
-	Hold      int      `xml:"hold,attr"`
-	Content   string   `xml:"content,attr"`
-	Ver       string   `xml:"ver,attr"`
-	XmppVer   string   `xml:"urn:xmpp:xbosh version,attr"`
-	XmlnsXmpp string   `xml:"xmlns xmpp,attr"`
-	Route     string   `xml:"route,attr"`
-	Sid       string   `xml:"sid,attr"`
-}
-
 // The real workhorse
 func postHandler(w http.ResponseWriter, r *http.Request) {
 	getCommonHeaders(w, r)
@@ -46,15 +30,23 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if payload.Sid == "" {
+	if payload.SID == "" {
+
+		if validationErr := validatePayloadForSessionCreation(&payload); validationErr != nil {
+			log.Println("Error validating payload for sessions creation:", validationErr.Error())
+			w.WriteHeader(400)
+			return
+		}
+
 		var sessionErr error
-		payload.Sid, sessionErr = sessions.CreateNewSession()
+		payload.SID, sessionErr = sessions.CreateNewSession()
 		if sessionErr != nil {
 			log.Println("Error creating session,", err.Error())
 			w.WriteHeader(500)
 			return
 		}
-	} else if !sessions.SessionExists(payload.Sid) {
+
+	} else if !sessions.SessionExists(payload.SID) {
 		log.Println("Invalid sid supplied for request")
 		w.WriteHeader(400)
 		return

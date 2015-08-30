@@ -58,18 +58,18 @@ func TestParsingSessionCreationPayload(t *testing.T) {
 
 	assert.Nil(t, err)
 
-	assert.Equal(t, 2902921866, pl.Rid)
-	assert.Equal(t, "http://jabber.org/protocol/httpbind", pl.Xmlns)
+	assert.Equal(t, "2902921866", pl.RID)
+	assert.Equal(t, "http://jabber.org/protocol/httpbind", pl.XMLNS)
 	assert.Equal(t, "chat.mysite.com", pl.To)
-	assert.Equal(t, "en", pl.XmlLang)
-	assert.Equal(t, 60, pl.Wait)
-	assert.Equal(t, 1, pl.Hold)
+	assert.Equal(t, "en", pl.XMLLang)
+	assert.Equal(t, "60", pl.Wait)
+	assert.Equal(t, "1", pl.Hold)
 	assert.Equal(t, "text/xml; charset=utf-8", pl.Content)
-	assert.Equal(t, "1.6", pl.Ver)
-	assert.Equal(t, "1.0", pl.XmppVer)
-	assert.Equal(t, "urn:xmpp:xbosh", pl.XmlnsXmpp)
+	assert.Equal(t, "1.6", pl.Version)
+	assert.Equal(t, "1.0", pl.XMPPVersion)
+	assert.Equal(t, "urn:xmpp:xbosh", pl.XMLNSXMPP)
 	assert.Equal(t, "xmpp:mysite.com:5999", pl.Route)
-	assert.Equal(t, "", pl.Sid)
+	assert.Equal(t, "", pl.SID)
 }
 
 func TestParsingSid(t *testing.T) {
@@ -77,7 +77,7 @@ func TestParsingSid(t *testing.T) {
 	err := xml.Unmarshal([]byte(`<body sid="abc123" />`), &pl)
 
 	assert.Nil(t, err)
-	assert.Equal(t, "abc123", pl.Sid)
+	assert.Equal(t, "abc123", pl.SID)
 }
 
 func TestPOSTWithNonExistantSidReturns400(t *testing.T) {
