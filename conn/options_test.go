@@ -14,7 +14,7 @@ var (
 	optionsTestConnUrl string      = "http://localhost:5280/http-bind"
 )
 
-func TestOptionsEndpointExistsReturns200(t *testing.T) {
+func TestOPTIONSEndpointExistsReturns200(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	req, _ := http.NewRequest("OPTIONS", optionsTestConnUrl, nil)
 
@@ -23,7 +23,7 @@ func TestOptionsEndpointExistsReturns200(t *testing.T) {
 	assert.Equal(t, 200, recorder.Code)
 }
 
-func TestOptionsEndpointReturnsNoBody(t *testing.T) {
+func TestOPTIONSEndpointReturnsNoBody(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	req, _ := http.NewRequest("OPTIONS", optionsTestConnUrl, nil)
 
@@ -32,7 +32,7 @@ func TestOptionsEndpointReturnsNoBody(t *testing.T) {
 	assert.Equal(t, "", recorder.Body.String())
 }
 
-func TestOptionsEndpointReturnsMethods(t *testing.T) {
+func TestOPTIONSEndpointReturnsMethods(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	req, _ := http.NewRequest("OPTIONS", optionsTestConnUrl, nil)
 
