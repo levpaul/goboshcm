@@ -9,6 +9,7 @@ import (
 	"encoding/xml"
 
 	"github.com/gorilla/mux"
+	"github.com/levilovelock/goboshcm/common"
 	"github.com/levilovelock/goboshcm/sessions"
 	"github.com/stretchr/testify/assert"
 )
@@ -31,7 +32,7 @@ var (
         route='xmpp:mysite.com:5999'/>`)
 )
 
-func TestSessionCreationPOSTReturns200(t *testing.T) {
+func TestSessionCreationPOSTReturns200AndOtherRequiredValues(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	sessions.InitialiseSessionsPool()
 
@@ -39,6 +40,7 @@ func TestSessionCreationPOSTReturns200(t *testing.T) {
 
 	postTestHandler.ServeHTTP(recorder, req)
 
+	assert.True(t, recorder.Body.Len() > 0)
 	assert.Equal(t, 200, recorder.Code)
 }
 
@@ -53,7 +55,7 @@ func TestPOSTWithBogusXmlReturns400(t *testing.T) {
 }
 
 func TestParsingSessionCreationPayload(t *testing.T) {
-	var pl Payload
+	var pl common.Payload
 	err := xml.Unmarshal(validFirstPOSTSessionCreationRequestBody, &pl)
 
 	assert.Nil(t, err)
@@ -73,7 +75,7 @@ func TestParsingSessionCreationPayload(t *testing.T) {
 }
 
 func TestParsingSid(t *testing.T) {
-	var pl Payload
+	var pl common.Payload
 	err := xml.Unmarshal([]byte(`<body sid="abc123" />`), &pl)
 
 	assert.Nil(t, err)

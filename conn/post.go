@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/levilovelock/goboshcm/common"
 	"github.com/levilovelock/goboshcm/sessions"
 
 	"encoding/xml"
@@ -21,7 +22,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	var payload Payload
+	var payload common.Payload
 
 	err := xml.Unmarshal(body, &payload)
 	if err != nil {
@@ -31,8 +32,8 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if payload.SID == "" {
-
-		if validationErr := validatePayloadForSessionCreation(&payload); validationErr != nil {
+		// Here we are expecting a session creation request
+		if validationErr := common.ValidatePayloadForSessionCreation(&payload); validationErr != nil {
 			log.Println("Error validating payload for sessions creation:", validationErr.Error())
 			w.WriteHeader(400)
 			return
@@ -45,6 +46,12 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(500)
 			return
 		}
+
+		// Here we need to populate the xml response and return it
+		responseBody := sessions.GenerateSessionCreationResponse(&payload)
+		w.Write([]byte(responseBody))
+		w.WriteHeader(200)
+		return
 
 	} else if !sessions.SessionExists(payload.SID) {
 		log.Println("Invalid sid supplied for request")

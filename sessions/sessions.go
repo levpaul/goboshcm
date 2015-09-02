@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/levilovelock/goboshcm/common"
 	"github.com/nu7hatch/gouuid"
 )
 
@@ -53,4 +54,8 @@ func generateNewSid() (string, error) {
 	sid = strings.Replace(sid, "-", "", -1)
 
 	return sid[0:40], nil
+}
+
+func GenerateSessionCreationResponse(p *common.Payload) string {
+	return ""
 }
