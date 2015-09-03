@@ -1,6 +1,8 @@
 package sessions
 
 import (
+	"encoding/xml"
+	"errors"
 	"math/rand"
 	"strings"
 	"time"
@@ -56,6 +58,11 @@ func generateNewSid() (string, error) {
 	return sid[0:40], nil
 }
 
-func GenerateSessionCreationResponse(p *common.Payload) string {
-	return ""
+func GenerateSessionCreationResponse(p *common.Payload) (string, error) {
+	returnPayload := new(common.Payload)
+	data, err := xml.Marshal(returnPayload)
+	if err != nil {
+		return "", errors.New("Error marshalling return payload")
+	}
+	return string(data), nil
 }

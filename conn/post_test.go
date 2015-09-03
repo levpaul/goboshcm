@@ -32,7 +32,7 @@ var (
         route='xmpp:mysite.com:5999'/>`)
 )
 
-func TestSessionCreationPOSTReturns200AndOtherRequiredValues(t *testing.T) {
+func TestSessionCreationPOSTReturns200(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	sessions.InitialiseSessionsPool()
 

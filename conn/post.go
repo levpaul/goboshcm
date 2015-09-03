@@ -48,7 +48,11 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Here we need to populate the xml response and return it
-		responseBody := sessions.GenerateSessionCreationResponse(&payload)
+		responseBody, sessionCreationErr := sessions.GenerateSessionCreationResponse(&payload)
+		if sessionCreationErr != nil {
+			w.WriteHeader(500)
+			return
+		}
 		w.Write([]byte(responseBody))
 		w.WriteHeader(200)
 		return
