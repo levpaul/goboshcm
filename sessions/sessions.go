@@ -1,7 +1,6 @@
 package sessions
 
 import (
-	"encoding/xml"
 	"errors"
 	"math/rand"
 	"strings"
@@ -59,10 +58,9 @@ func generateNewSid() (string, error) {
 }
 
 func GenerateSessionCreationResponse(p *common.Payload) (string, error) {
-	returnPayload := new(common.Payload)
-	data, err := xml.Marshal(returnPayload)
-	if err != nil {
-		return "", errors.New("Error marshalling return payload")
+	if p.SID == "" {
+		return "", errors.New("Error creating session response - no SID for session")
 	}
-	return string(data), nil
+	// Here we manually build up a xml response, because the Marshal function of encoding/xml doesn't give you the option to NOT marshal empty attributes
+	return `<body xmlns="http://jabber.org/protocol/httpbind"></body>`, nil
 }
