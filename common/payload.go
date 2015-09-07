@@ -7,18 +7,18 @@ import (
 
 type Payload struct {
 	XMLName     xml.Name `xml:"body"`
-	RID         string   `xml:"rid,attr"`
-	To          string   `xml:"to,attr"`
-	XMLNS       string   `xml:"xmlns,attr"`
-	XMLLang     string   `xml:"http://www.w3.org/XML/1998/namespace lang,attr"`
-	Wait        string   `xml:"wait,attr"`
-	Hold        string   `xml:"hold,attr"`
-	Content     string   `xml:"content,attr"`
-	Version     string   `xml:"ver,attr"`
-	XMPPVersion string   `xml:"urn:xmpp:xbosh version,attr"`
-	XMLNSXMPP   string   `xml:"xmlns xmpp,attr"`
-	Route       string   `xml:"route,attr"`
-	SID         string   `xml:"sid,attr"`
+	RID         string   `xml:"rid,attr,omitempty"`
+	To          string   `xml:"to,attr,omitempty"`
+	XMLNS       string   `xml:"xmlns,attr,omitempty"`
+	XMLLang     string   `xml:"http://www.w3.org/XML/1998/namespace lang,attr,omitempty"`
+	Wait        string   `xml:"wait,attr,omitempty"`
+	Hold        string   `xml:"hold,attr,omitempty"`
+	Content     string   `xml:"content,attr,omitempty"`
+	Version     string   `xml:"ver,attr,omitempty"`
+	XMPPVersion string   `xml:"urn:xmpp:xbosh version,attr,omitempty"`
+	XMLNSXMPP   string   `xml:"xmlns xmpp,attr,omitempty"`
+	Route       string   `xml:"route,attr,omitempty"`
+	SID         string   `xml:"sid,attr,omitempty"`
 }
 
 func ValidatePayloadForSessionCreation(pl *Payload) error {

@@ -1,8 +1,10 @@
 package sessions
 
 import (
+	"encoding/xml"
 	"errors"
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 
@@ -10,8 +12,14 @@ import (
 	"github.com/nu7hatch/gouuid"
 )
 
+const (
+	MIN_WAIT = 15
+	MAX_WAIT = 60
+)
+
 type Session struct {
 	Authenticated bool
+	Wait          int
 }
 
 var (
@@ -58,9 +66,25 @@ func generateNewSid() (string, error) {
 }
 
 func GenerateSessionCreationResponse(p *common.Payload) (string, error) {
-	if p.SID == "" {
+	returnPayload := new(common.Payload)
+
+	// Set SID
+	if p.SID == "" || sessions[p.SID] == nil {
 		return "", errors.New("Error creating session response - no SID for session")
 	}
-	// Here we manually build up a xml response, because the Marshal function of encoding/xml doesn't give you the option to NOT marshal empty attributes
-	return `<body xmlns="http://jabber.org/protocol/httpbind"></body>`, nil
+	returnPayload.SID = p.SID
+
+	// Set Wait
+	clientWait, waitParseErr := strconv.Atoi(p.Wait)
+	if waitParseErr != nil {
+		return "", errors.New("Error parsing wait from client")
+	}
+	sessions[p.SID].Wait = common.Min(common.Max(clientWait, MIN_WAIT), MAX_WAIT)
+	returnPayload.Wait = strconv.Itoa(sessions[p.SID].Wait)
+
+	data, err := xml.Marshal(returnPayload)
+	if err != nil {
+		return "", errors.New("Error marshalling return payload")
+	}
+	return string(data), nil
 }

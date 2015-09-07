@@ -26,7 +26,6 @@ func getSessionCreationPayload() *common.Payload {
 		XMPPVersion: "1.0",
 		XMLNSXMPP:   "urn:xmpp:xbosh",
 		Route:       "xmpp:mysite.com:5999",
-		SID:         "a73f45f297e6ee34ad8300e68bb531c59850c699",
 	}
 	return pl
 }
@@ -56,6 +55,7 @@ func TestSidCreationReturnsSid40CharsLong(t *testing.T) {
 
 func TestGenerateSessionCreationResponseIsXmlAndHasMinimalAttrs(t *testing.T) {
 	pl := getSessionCreationPayload()
+	pl.SID, _ = CreateNewSession()
 
 	stringResponse, err := GenerateSessionCreationResponse(pl)
 	assert.Nil(t, err)
