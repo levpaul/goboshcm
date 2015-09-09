@@ -19,6 +19,7 @@ type Payload struct {
 	XMLNSXMPP   string   `xml:"xmlns xmpp,attr,omitempty"`
 	Route       string   `xml:"route,attr,omitempty"`
 	SID         string   `xml:"sid,attr,omitempty"`
+	Requests    string   `xml:"requests,attr,omitempty"`
 }
 
 func ValidatePayloadForSessionCreation(pl *Payload) error {

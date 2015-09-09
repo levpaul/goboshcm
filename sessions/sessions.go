@@ -12,14 +12,18 @@ import (
 	"github.com/nu7hatch/gouuid"
 )
 
+// TODO: Put this into config
 const (
-	MIN_WAIT = 15
-	MAX_WAIT = 60
+	MIN_WAIT     = 15
+	MAX_WAIT     = 60
+	MIN_REQUESTS = 2
+	MAX_REQUESTS = 2
 )
 
 type Session struct {
 	Authenticated bool
 	Wait          int
+	Requests      int
 }
 
 var (
@@ -73,14 +77,26 @@ func GenerateSessionCreationResponse(p *common.Payload) (string, error) {
 		return "", errors.New("Error creating session response - no SID for session")
 	}
 	returnPayload.SID = p.SID
+	clientSession := sessions[p.SID]
 
 	// Set Wait
 	clientWait, waitParseErr := strconv.Atoi(p.Wait)
 	if waitParseErr != nil {
 		return "", errors.New("Error parsing wait from client")
 	}
-	sessions[p.SID].Wait = common.Min(common.Max(clientWait, MIN_WAIT), MAX_WAIT)
-	returnPayload.Wait = strconv.Itoa(sessions[p.SID].Wait)
+	clientSession.Wait = common.Min(common.Max(clientWait, MIN_WAIT), MAX_WAIT)
+	returnPayload.Wait = strconv.Itoa(clientSession.Wait)
+
+	// Set Requests
+	clientHold, holdParseErr := strconv.Atoi(p.Hold)
+	if holdParseErr != nil {
+		return "", errors.New("Error parsing hold from client")
+	}
+	if clientHold+1 > MAX_REQUESTS || clientHold+1 < MIN_REQUESTS {
+		return "", errors.New("Unsupported hold value from client")
+	}
+	clientSession.Requests = common.Min(common.Max(clientHold, MIN_REQUESTS), MAX_REQUESTS)
+	returnPayload.Requests = strconv.Itoa(clientSession.Requests)
 
 	data, err := xml.Marshal(returnPayload)
 	if err != nil {
