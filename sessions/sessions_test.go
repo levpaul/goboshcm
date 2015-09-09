@@ -36,6 +36,7 @@ type responsePayload struct {
 	SID      string   `xml:"sid,attr"`
 	Wait     int      `xml:"wait,attr"`
 	Requests int      `xml:"requests,attr"`
+	Polling  string   `xml:"polling,attr"`
 }
 
 func TestSessionCreationAndValidation(t *testing.T) {
@@ -74,4 +75,17 @@ func TestGenerateSessionCreationResponseIsXmlAndHasMinimalAttrs(t *testing.T) {
 	// Check Requests
 	clientHold, _ := strconv.Atoi(pl.Hold)
 	assert.True(t, response.Requests > clientHold)
+}
+
+func TestValidGenerateSessionCreationsResposneReturnsPolling(t *testing.T) {
+	pl := getSessionCreationPayload()
+	pl.SID, _ = CreateNewSession()
+
+	stringResponse, err := GenerateSessionCreationResponse(pl)
+	assert.Nil(t, err)
+
+	var response *responsePayload = new(responsePayload)
+	xml.Unmarshal([]byte(stringResponse), response)
+
+	assert.Equal(t, "15", response.Polling)
 }

@@ -18,6 +18,7 @@ const (
 	MAX_WAIT     = 60
 	MIN_REQUESTS = 2
 	MAX_REQUESTS = 2
+	POLLING      = "15"
 )
 
 type Session struct {
@@ -70,7 +71,7 @@ func generateNewSid() (string, error) {
 }
 
 func GenerateSessionCreationResponse(p *common.Payload) (string, error) {
-	returnPayload := new(common.Payload)
+	returnPayload := common.NewPayload()
 
 	// Set SID
 	if p.SID == "" || sessions[p.SID] == nil {
@@ -97,6 +98,9 @@ func GenerateSessionCreationResponse(p *common.Payload) (string, error) {
 	}
 	clientSession.Requests = common.Min(common.Max(clientHold, MIN_REQUESTS), MAX_REQUESTS)
 	returnPayload.Requests = strconv.Itoa(clientSession.Requests)
+
+	// Set polling
+	returnPayload.Polling = POLLING
 
 	data, err := xml.Marshal(returnPayload)
 	if err != nil {

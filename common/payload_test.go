@@ -67,6 +67,11 @@ func TestPayloadValidationForSessionCreationFailsOnHold(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
+func TestNewPayloadHasCorrectXMLNS(t *testing.T) {
+	pl := NewPayload()
+	assert.Equal(t, pl.XMLNS, "http://jabber.org/protocol/httpbind")
+}
+
 func getValidPayloadForSessionCreation() *Payload {
 	return &Payload{
 		RID:     "2902921866",

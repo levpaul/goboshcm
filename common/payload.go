@@ -5,6 +5,10 @@ import (
 	"errors"
 )
 
+const (
+	DEF_XMLNS = "http://jabber.org/protocol/httpbind"
+)
+
 type Payload struct {
 	XMLName     xml.Name `xml:"body"`
 	RID         string   `xml:"rid,attr,omitempty"`
@@ -20,6 +24,11 @@ type Payload struct {
 	Route       string   `xml:"route,attr,omitempty"`
 	SID         string   `xml:"sid,attr,omitempty"`
 	Requests    string   `xml:"requests,attr,omitempty"`
+	Polling     string   `xml:"polling,attr,omitempty"`
+}
+
+func NewPayload() *Payload {
+	return &Payload{XMLNS: DEF_XMLNS}
 }
 
 func ValidatePayloadForSessionCreation(pl *Payload) error {
