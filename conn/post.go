@@ -51,6 +51,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		// Here we need to populate the xml response and return it
 		responseBody, sessionCreationErr := sessions.GenerateSessionCreationResponse(&payload)
 		if sessionCreationErr != nil {
+			log.Debug("Error creating session:", sessionCreationErr)
 			w.WriteHeader(500)
 			return
 		}
