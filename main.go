@@ -1,7 +1,8 @@
 package main
 
 import (
-	"log"
+	log "github.com/Sirupsen/logrus"
+
 	"net/http"
 
 	"github.com/levilovelock/goboshcm/conn"
@@ -15,7 +16,7 @@ func main() {
 		log.Fatal("An error occurred starting the sessions pool,", sessionsErr.Error())
 	}
 
-	log.Println("Starting GoBOSHCM server, listenining on :5280")
+	log.Infoln("Starting GoBOSHCM server, listenining on :5280")
 	err := http.ListenAndServe(":5280", r)
 	if err != nil {
 		log.Fatal("There was an error starting the server:", err.Error())

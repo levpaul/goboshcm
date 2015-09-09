@@ -1,8 +1,9 @@
 package conn
 
 import (
-	"log"
 	"net/http"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 // Just return a link to the XEP-124 spec
@@ -14,6 +15,6 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
   </body>
 </html>`))
 	if err != nil {
-		log.Println("Error writing response to GET request:", err.Error())
+		log.Infoln("Error writing response to GET request:", err.Error())
 	}
 }

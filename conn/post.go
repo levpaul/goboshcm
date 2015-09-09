@@ -2,8 +2,9 @@ package conn
 
 import (
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	log "github.com/Sirupsen/logrus"
 
 	"github.com/levilovelock/goboshcm/common"
 	"github.com/levilovelock/goboshcm/sessions"
@@ -18,7 +19,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	body, readErr := ioutil.ReadAll(r.Body)
 
 	if readErr != nil {
-		log.Println("Error reading body from request!")
+		log.Infoln("Error reading body from request!")
 	}
 	defer r.Body.Close()
 
@@ -26,7 +27,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := xml.Unmarshal(body, &payload)
 	if err != nil {
-		log.Println("Failed to unmarshal xml payload:", err.Error())
+		log.Infoln("Failed to unmarshal xml payload:", err.Error())
 		w.WriteHeader(400)
 		return
 	}
@@ -34,7 +35,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	if payload.SID == "" {
 		// Here we are expecting a session creation request
 		if validationErr := common.ValidatePayloadForSessionCreation(&payload); validationErr != nil {
-			log.Println("Error validating payload for sessions creation:", validationErr.Error())
+			log.Infoln("Error validating payload for sessions creation:", validationErr.Error())
 			w.WriteHeader(400)
 			return
 		}
@@ -42,7 +43,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		var sessionErr error
 		payload.SID, sessionErr = sessions.CreateNewSession()
 		if sessionErr != nil {
-			log.Println("Error creating session,", err.Error())
+			log.Infoln("Error creating session,", err.Error())
 			w.WriteHeader(500)
 			return
 		}
@@ -58,7 +59,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		return
 
 	} else if !sessions.SessionExists(payload.SID) {
-		log.Println("Invalid sid supplied for request")
+		log.Infoln("Invalid sid supplied for request")
 		w.WriteHeader(400)
 		return
 	}
